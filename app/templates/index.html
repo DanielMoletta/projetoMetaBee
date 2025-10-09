@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <!-- Coluna para os Logs de Acesso -->
+    <div class="col-lg-7 mb-4">
+        <h2>Logs de Acesso em Tempo Real</h2>
+        <div class="card">
+            <div class="card-body">
+                <p class="card-text text-muted">Exibindo os 5 eventos mais recentes. A lista atualiza automaticamente.</p>
+                <ul class="list-group list-group-flush" id="log-list">
+                    <!-- Logs serão inseridos aqui pelo JavaScript -->
+                    <li class="list-group-item">Carregando logs...</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Coluna para as Tags Cadastradas -->
+    <div class="col-lg-5">
+        <h2>Tags RFID Cadastradas</h2>
+        <div class="d-grid gap-2 mb-3">
+             <a href="{{ url_for('main.register_tag') }}" class="btn btn-primary">Registrar Nova Tag</a>
+        </div>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Nome</th>
+                    <th scope="col">UID da Tag</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tag in tags %}
+                <tr>
+                    <td>{{ tag.username }}</td>
+                    <td>{{ tag.tag_uid }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="2" class="text-center">Nenhuma tag cadastrada.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function fetchLogs() {
+        fetch('/api/get_logs')
+            .then(response => response.json())
+            .then(data => {
+                const logList = document.getElementById('log-list');
+                logList.innerHTML = ''; // Limpa a lista atual
+                
+                if (data.length === 0) {
+                    logList.innerHTML = '<li class="list-group-item">Nenhum log de acesso ainda.</li>';
+                    return;
+                }
+
+                data.forEach(log => {
+                    const listItem = document.createElement('li');
+                    
+                    // Define a cor do "selo" com base no status do acesso
+                    const badgeClass = log.status === 'Acesso Garantido' ? 'text-bg-success' : 'text-bg-danger';
+                    
+                    listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+                    listItem.innerHTML = `
+                        <div>
+                            <span class="badge ${badgeClass} me-2">${log.status}</span>
+                            <strong>${log.username}</strong>
+                            <small class="d-block text-muted mt-1">UID: ${log.tag_uid}</small>
+                        </div>
+                        <small class="text-muted">${log.timestamp}</small>
+                    `;
+                    logList.appendChild(listItem);
+                });
+            })
+            .catch(error => {
+                console.error('Erro ao buscar logs:', error);
+                const logList = document.getElementById('log-list');
+                logList.innerHTML = '<li class="list-group-item text-danger">Erro ao carregar logs.</li>';
+            });
+    }
+
+    // Busca os logs quando a página carrega e depois a cada 5 segundos
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchLogs();
+        setInterval(fetchLogs, 5000);
+    });
+</script>
+{% endblock %}
+

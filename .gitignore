@@ -1,0 +1,37 @@
+# Ambientes Virtuais
+# A lista de dependências está no requirements.txt.
+venv/
+.venv/
+env/
+.env/
+
+# Arquivos de Cache do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Banco de Dados
+*.db
+*.sqlite
+*.sqlite3
+
+# Pasta de Instância do Flask
+# ESSENCIAL! Esta pasta contém segredos e configurações locais
+# que NUNCA devem ir para o repositório.
+instance/
+
+# Arquivos de Configuração Local
+# chaves de API, senhas de banco de dados, etc.
+.env
+.flaskenv
+
+# Pastas de IDEs e Editores de Código
+.vscode/
+.idea/
+.project
+.settings/
+
+# Arquivos de Sistema Operacional
+.DS_Store
+Thumbs.db
