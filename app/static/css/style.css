@@ -1,0 +1,66 @@
+/* Cor de fundo principal da marca MetaBee */
+.bg-metabee-yellow {
+    background-color: #B9852B !important;
+}
+
+/* Cor de texto principal da marca MetaBee */
+.text-metabee-yellow {
+    color: #B9852B !important;
+}
+
+/* Estilo customizado para os botões principais, com !important para garantir a sobreposição */
+.btn-metabee {
+    background-color: #B9852B !important;
+    color: #ffffff !important;
+    border: 1px solid #B9852B !important;
+}
+
+/* Efeito hover para os botões */
+.btn-metabee:hover {
+    background-color: #a07425 !important;
+    color: #ffffff !important;
+    border-color: #a07425 !important;
+}
+
+/* Botão da navbar */
+.navbar-btn-yellow {
+    background-color: #B9852B;
+    color: #000000;
+    border: 1px solid #a07425;
+    border-radius: 20px; /* Bordas arredondadas */
+    padding: 6px 15px; /* Espaçamento interno */
+    margin: 0 5px; /* Espaçamento entre os botões */
+    transition: background-color 0.2s, color 0.2s; /* Transição suave */
+    
+    /* Alinhamento de ícone e texto */
+    display: flex;
+    align-items: center;
+}
+
+.navbar-btn-yellow:hover {
+    background-color: #a07425;
+    color: #ffffff;
+    border-color: #a07425;
+}
+
+/* Estilos para garantir que o texto da Navbar seja preto */
+.navbar.bg-metabee-yellow .navbar-brand,
+.navbar.bg-metabee-yellow .nav-link,
+.navbar.bg-metabee-yellow .navbar-text {
+    color: #000000; /* Texto preto */
+}
+
+/* Ajuste de cor no hover para links da navbar (exceto os botões customizados) */
+.navbar.bg-metabee-yellow .nav-link:not(.navbar-btn-yellow):hover,
+.navbar.bg-metabee-yellow .navbar-brand:hover {
+    color: #1b150a; /* Preto um pouco mais suave no hover */
+}
+
+/* Cor do ícone do toggler (hambúrguer) para preto */
+.navbar.bg-metabee-yellow .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 0, 0, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.navbar.bg-metabee-yellow .navbar-toggler {
+    border-color: rgba(0,0,0,0.3);
+}

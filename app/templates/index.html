@@ -2,25 +2,22 @@
 
 {% block content %}
 <div class="row">
-    <!-- Coluna para os Logs de Acesso -->
     <div class="col-lg-7 mb-4">
         <h2>Logs de Acesso em Tempo Real</h2>
         <div class="card">
             <div class="card-body">
                 <p class="card-text text-muted">Exibindo os 5 eventos mais recentes. A lista atualiza automaticamente.</p>
                 <ul class="list-group list-group-flush" id="log-list">
-                    <!-- Logs serão inseridos aqui pelo JavaScript -->
                     <li class="list-group-item">Carregando logs...</li>
                 </ul>
             </div>
         </div>
     </div>
 
-    <!-- Coluna para as Tags Cadastradas -->
     <div class="col-lg-5">
         <h2>Tags RFID Cadastradas</h2>
         <div class="d-grid gap-2 mb-3">
-             <a href="{{ url_for('main.register_tag') }}" class="btn btn-primary">Registrar Nova Tag</a>
+             <a href="{{ url_for('main.register_tag') }}" class="btn btn-metabee">Registrar Nova Tag</a>
         </div>
         <table class="table table-striped table-hover">
             <thead>
@@ -90,4 +87,3 @@
     });
 </script>
 {% endblock %}
-
