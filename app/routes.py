@@ -50,8 +50,8 @@ def send_discord_webhook(uid: str, username: str, status: str) -> None:
         description = f"O usuário **{username}** acessou as instalações."
 
     payload = {
-        "username": "Controle de Acesso",
-        "avatar_url": "https://i.imgur.com/R6yYwko.png",
+        "username": "MetaBot - Controle de Acesso",
+        "avatar_url": "./static/img/vetor-preto.png",
         "embeds": [{
             "title": title,
             "description": description,
