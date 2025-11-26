@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% if title %}
-    <title>{{ title }} - MetaBee</title>
+    <title>{{ title }} - MetaBee Security</title>
     {% else %}
-    <title>Bem-vindo ao MetaBee</title>
+    <title>MetaBee Security</title>
     {% endif %}
     
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -17,9 +17,11 @@
 </head>
 <body class="bg-body-tertiary">
 
-    <nav class="navbar navbar-expand-lg bg-metabee-yellow">
+    <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ url_for('main.index') }}">MetaBee</a>
+            <a class="navbar-brand" href="{{ url_for('main.index') }}">
+                <i class="fas fa-hexagon-nodes me-2"></i>MetaBee
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -27,28 +29,32 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     {% if current_user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link navbar-btn-yellow" href="{{ url_for('main.index') }}">
-                            <i class="fas fa-home me-1"></i> Home
+                        <a class="nav-link" href="{{ url_for('main.index') }}">
+                            <i class="fas fa-chart-line me-1"></i> Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link navbar-btn-yellow" href="{{ url_for('main.register_tag') }}">
-                            <i class="fas fa-id-card me-1"></i> Registrar Tag
+                        <a class="nav-link" href="{{ url_for('main.register_tag') }}">
+                            <i class="fas fa-fingerprint me-1"></i> Acessos
                         </a>
                     </li>
                     {% endif %}
                 </ul>
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
                     {% if current_user.is_authenticated %}
-                        <li class="nav-item">
-                            <span class="navbar-text">Olá, {{ current_user.username }}!</span>
+                        <li class="nav-item me-3">
+                            <span class="navbar-text text-white small">
+                                <i class="fas fa-user-circle me-1"></i> {{ current_user.username }}
+                            </span>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link navbar-btn-yellow" href="{{ url_for('main.logout') }}">Logout</a>
+                            <a class="btn btn-sm btn-outline-danger border-0" href="{{ url_for('main.logout') }}">
+                                <i class="fas fa-sign-out-alt"></i> Sair
+                            </a>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link navbar-btn-yellow" href="{{ url_for('main.login') }}">Login</a>
+                            <a class="nav-link" href="{{ url_for('main.login') }}">Login</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -56,13 +62,13 @@
         </div>
     </nav>
 
-    <main class="container mt-4">
+    <main class="container mt-5">
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
-                <div class="alert alert-{{ category or 'success' }} alert-dismissible fade show" role="alert">
+                <div class="alert alert-{{ category or 'primary' }} alert-dismissible fade show shadow-sm" role="alert" style="background: rgba(30,30,35,0.9); border: 1px solid #444; color: #fff;">
                     {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             {% endfor %}
         {% endif %}

@@ -1,89 +1,200 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row">
-    <div class="col-lg-7 mb-4">
-        <h2>Logs de Acesso em Tempo Real</h2>
-        <div class="card">
-            <div class="card-body">
-                <p class="card-text text-muted">Exibindo os 5 eventos mais recentes. A lista atualiza automaticamente.</p>
-                <ul class="list-group list-group-flush" id="log-list">
-                    <li class="list-group-item">Carregando logs...</li>
-                </ul>
+<div class="row g-4 mb-5 animate-fade-up">
+    <div class="col-md-4">
+        <div class="glass-card stat-card p-4 d-flex align-items-center">
+            <div class="stat-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div>
+                <h6 class="text-muted mb-1 text-uppercase small fw-bold">Membros Ativos</h6>
+                <h3 class="fw-bold mb-0 text-white">{{ tags|length }}</h3>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="glass-card stat-card p-4 d-flex align-items-center">
+            <div class="stat-icon text-success" style="background: rgba(25, 135, 84, 0.15); color: #198754;">
+                <i class="fas fa-wifi"></i>
+            </div>
+            <div>
+                <h6 class="text-muted mb-1 text-uppercase small fw-bold">Link ESP32</h6>
+                <h3 class="fw-bold mb-0 fs-4 text-white">Conectado</h3>
             </div>
         </div>
     </div>
 
-    <div class="col-lg-5">
-        <h2>Tags RFID Cadastradas</h2>
-        <div class="d-grid gap-2 mb-3">
-             <a href="{{ url_for('main.register_tag') }}" class="btn btn-metabee">Registrar Nova Tag</a>
+    <div class="col-md-4">
+        <div class="glass-card stat-card p-4 d-flex align-items-center justify-content-between">
+            <div>
+                <h6 class="text-muted mb-1 text-uppercase small fw-bold">Gerenciar</h6>
+                <h5 class="fw-bold mb-0 text-white">Novo Acesso</h5>
+            </div>
+            <a href="{{ url_for('main.register_tag') }}" class="btn btn-metabee">
+                <i class="fas fa-plus me-2"></i>Cadastrar
+            </a>
         </div>
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">Nome</th>
-                    <th scope="col">UID da Tag</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for tag in tags %}
-                <tr>
-                    <td>{{ tag.username }}</td>
-                    <td>{{ tag.tag_uid }}</td>
-                </tr>
-                {% else %}
-                <tr>
-                    <td colspan="2" class="text-center">Nenhuma tag cadastrada.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    </div>
+</div>
+
+<div class="row g-4">
+    
+    <div class="col-lg-6 animate-fade-up delay-1">
+        <h4 class="mb-3 fw-bold text-white"><i class="fas fa-terminal me-2 text-metabee"></i>Feed de Acesso</h4>
+        <div class="terminal-window shadow-lg">
+            <div class="terminal-header">
+                <div class="terminal-dot bg-danger"></div>
+                <div class="terminal-dot bg-warning"></div>
+                <div class="terminal-dot bg-success"></div>
+                <span class="ms-2 text-muted small font-monospace" style="font-size: 0.75rem;">root@metabee:~/logs/rfid_events</span>
+            </div>
+            
+            <ul class="list-unstyled mt-4 ps-2" id="log-list" style="font-size: 0.9rem;">
+                <li class="text-muted blink-cursor small">> Inicializando monitoramento...</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-lg-6 animate-fade-up delay-2">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="fw-bold m-0 text-white">Credenciais</h4>
+            <span class="badge bg-dark border border-secondary">{{ tags|length }} tags</span>
+        </div>
+        
+        <div class="glass-card p-0 overflow-hidden">
+            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                <table class="table table-hover align-middle mb-0">
+                    <thead style="background: rgba(0,0,0,0.3); border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <tr>
+                            <th class="ps-4 py-3 text-uppercase small text-muted">Identidade</th>
+                            <th class="py-3 text-uppercase small text-muted">UID Hex</th>
+                            <th class="text-end pe-4 py-3"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tag in tags %}
+                        <tr style="cursor: pointer;">
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <img src="{{ url_for('static', filename='profile_pics/' + tag.image_file) }}" 
+                                         alt="{{ tag.username }}" 
+                                         class="avatar-md me-3 shadow-sm">
+                                    <div>
+                                        <div class="fw-bold text-white">{{ tag.username }}</div>
+                                        <small class="text-muted" style="font-size: 0.75rem;">Nível 1</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="font-monospace text-warning small">{{ tag.tag_uid }}</td>
+                            <td class="text-end pe-4">
+                                <i class="fas fa-ellipsis-h text-muted"></i>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="3" class="text-center py-5 text-muted">
+                                <i class="fas fa-inbox fa-2x mb-3 d-block opacity-25"></i>
+                                Nenhuma tag cadastrada.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
+    // Controle para a primeira carga da página
+    let firstLoad = true;
+    // Armazena timestamp para evitar recriar a lista se nada mudou
+    let lastLogTimestamp = '';
+
     function fetchLogs() {
         fetch('/api/get_logs')
             .then(response => response.json())
             .then(data => {
                 const logList = document.getElementById('log-list');
-                logList.innerHTML = ''; // Limpa a lista atual
                 
+                // Se não houver dados
                 if (data.length === 0) {
-                    logList.innerHTML = '<li class="list-group-item">Nenhum log de acesso ainda.</li>';
+                    if (firstLoad) {
+                         logList.innerHTML = '<li class="text-muted blink-cursor small">> Nenhum evento registrado hoje.</li>';
+                         firstLoad = false;
+                    }
                     return;
                 }
 
-                data.forEach(log => {
+                // Verifica se mudou algo comparando o timestamp do mais recente
+                if (data[0].timestamp === lastLogTimestamp) {
+                    return;
+                }
+                lastLogTimestamp = data[0].timestamp;
+
+                // Limpa a lista
+                logList.innerHTML = ''; 
+
+                // Gera a lista
+                data.forEach((log, index) => {
                     const listItem = document.createElement('li');
                     
-                    // Define a cor do "selo" com base no status do acesso
-                    const badgeClass = log.status === 'Acesso Garantido' ? 'text-bg-success' : 'text-bg-danger';
+                    // Adiciona apenas a classe de animação, sem bordas fixas do bootstrap
+                    // Isso permite que o CSS customizado (hover) funcione
+                    listItem.className = 'log-item-enter';
                     
-                    listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+                    // Efeito cascata na primeira carga
+                    if (firstLoad) {
+                         listItem.style.animationDelay = `${index * 0.1}s`;
+                    }
+                    
+                    // Definição de Ícones e Cores
+                    const isSuccess = log.status === 'Acesso Garantido';
+                    const colorClass = isSuccess ? 'text-success' : 'text-danger';
+                    
+                    // Inline style para o brilho neon no ícone
+                    const shadowColor = isSuccess ? 'rgba(25, 135, 84, 0.6)' : 'rgba(220, 53, 69, 0.6)';
+                    const icon = isSuccess ? 'fa-check' : 'fa-times';
+                    const statusText = isSuccess ? 'ALLOW' : 'DENY';
+                    
                     listItem.innerHTML = `
-                        <div>
-                            <span class="badge ${badgeClass} me-2">${log.status}</span>
-                            <strong>${log.username}</strong>
-                            <small class="d-block text-muted mt-1">UID: ${log.tag_uid}</small>
+                        <div class="d-flex justify-content-between align-items-center font-monospace">
+                            <div class="d-flex align-items-center">
+                                <span class="text-muted opacity-50 me-3 small">[${log.timestamp.split(' ')[1]}]</span>
+                                
+                                <span class="${colorClass} fw-bold d-flex align-items-center" style="width: 80px;">
+                                    <i class="fas ${icon} me-2" style="text-shadow: 0 0 10px ${shadowColor};"></i>
+                                    ${statusText}
+                                </span>
+                                
+                                <span class="text-white ms-2 fw-bold" style="letter-spacing: 0.5px;">${log.username}</span>
+                            </div>
+                            
+                            <span class="text-muted small opacity-25 border border-secondary rounded px-2 py-0">${log.tag_uid}</span>
                         </div>
-                        <small class="text-muted">${log.timestamp}</small>
                     `;
                     logList.appendChild(listItem);
                 });
+                
+                // Cursor piscante no final
+                const cursorItem = document.createElement('li');
+                cursorItem.className = 'text-muted blink-cursor mt-3 small';
+                cursorItem.innerHTML = '> Monitorando porta serial (ESP32)...';
+                logList.appendChild(cursorItem);
+
+                firstLoad = false;
             })
-            .catch(error => {
-                console.error('Erro ao buscar logs:', error);
-                const logList = document.getElementById('log-list');
-                logList.innerHTML = '<li class="list-group-item text-danger">Erro ao carregar logs.</li>';
-            });
+            .catch(error => console.error('Erro:', error));
     }
 
-    // Busca os logs quando a página carrega e depois a cada 5 segundos
     document.addEventListener('DOMContentLoaded', () => {
-        fetchLogs();
-        setInterval(fetchLogs, 5000);
+        // Delay inicial para dar tempo da animação da navbar acontecer
+        setTimeout(() => {
+             fetchLogs();
+             setInterval(fetchLogs, 2000); 
+        }, 500);
     });
 </script>
 {% endblock %}

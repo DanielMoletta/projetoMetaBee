@@ -1,66 +1,247 @@
-/* Cor de fundo principal da marca MetaBee */
-.bg-metabee-yellow {
-    background-color: #B9852B !important;
+:root {
+    --primary-gold: #B9852B;
+    --primary-hover: #d49a36;
+    --dark-bg: #0f1012;
+    --card-bg: rgba(30, 31, 35, 0.7);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+    --text-main: #e1e1e1;
+    --terminal-bg: #080808;
 }
 
-/* Cor de texto principal da marca MetaBee */
-.text-metabee-yellow {
-    color: #B9852B !important;
+/* --- Fundo Animado "Cyber" --- */
+body {
+    background-color: var(--dark-bg);
+    color: var(--text-main);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden; /* Evita scroll horizontal nas animações de entrada */
 }
 
-/* Estilo customizado para os botões principais, com !important para garantir a sobreposição */
-.btn-metabee {
-    background-color: #B9852B !important;
-    color: #ffffff !important;
-    border: 1px solid #B9852B !important;
+/* Efeito de linhas de varredura (Scanlines) no fundo */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: repeating-linear-gradient(
+        transparent 0px,
+        transparent 2px,
+        rgba(185, 133, 43, 0.03) 3px,
+        rgba(185, 133, 43, 0.03) 4px
+    );
+    pointer-events: none; /* O mouse passa direto */
+    z-index: -1;
 }
 
-/* Efeito hover para os botões */
-.btn-metabee:hover {
-    background-color: #a07425 !important;
-    color: #ffffff !important;
-    border-color: #a07425 !important;
+/* Efeito de "Vinheta" piscante sutil */
+body::after {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at center, transparent 50%, rgba(0,0,0,0.4) 100%);
+    animation: pulse-bg 10s infinite alternate ease-in-out;
+    pointer-events: none;
+    z-index: -2;
 }
 
-/* Botão da navbar */
-.navbar-btn-yellow {
-    background-color: #B9852B;
-    color: #000000;
-    border: 1px solid #a07425;
-    border-radius: 20px; /* Bordas arredondadas */
-    padding: 6px 15px; /* Espaçamento interno */
-    margin: 0 5px; /* Espaçamento entre os botões */
-    transition: background-color 0.2s, color 0.2s; /* Transição suave */
+/* --- Animações Keyframes --- */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse-bg {
+    0% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+@keyframes btn-shine {
+    0% { left: -100%; transition-property: left; }
+    100% { left: 100%; transition-property: left; }
+}
+
+@keyframes terminal-blink { 50% { opacity: 0; } }
+
+/* Classes utilitárias de animação */
+.animate-fade-up { animation: fadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; }
+.delay-1 { animation-delay: 0.2s; }
+.delay-2 { animation-delay: 0.4s; }
+.delay-3 { animation-delay: 0.6s; }
+
+/* --- Cards & Glass Effect --- */
+.glass-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: var(--glass-border);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efeito elástico suave */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hover dramático nos cards: levanta e brilha a borda */
+.glass-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: rgba(185, 133, 43, 0.5);
+    box-shadow: 0 15px 40px rgba(185, 133, 43, 0.2);
+}
+
+/* --- Navbar (Atualizado) --- */
+.navbar {
+    /* Usa a mesma base dos cards para consistência total */
+    background: rgba(30, 31, 35, 0.6) !important; 
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     
-    /* Alinhamento de ícone e texto */
-    display: flex;
-    align-items: center;
+    /* Borda sutil apenas embaixo */
+    border-bottom: 1px solid rgba(185, 133, 43, 0.15);
+    
+    /* Animação de entrada */
+    animation: fadeDown 0.8s ease-out;
 }
 
-.navbar-btn-yellow:hover {
-    background-color: #a07425;
-    color: #ffffff;
-    border-color: #a07425;
+/* Ajuste dos links para destacar o Dourado no Hover */
+.navbar-nav .nav-link {
+    color: rgba(255,255,255,0.7) !important;
+    transition: color 0.3s;
 }
 
-/* Estilos para garantir que o texto da Navbar seja preto */
-.navbar.bg-metabee-yellow .navbar-brand,
-.navbar.bg-metabee-yellow .nav-link,
-.navbar.bg-metabee-yellow .navbar-text {
-    color: #000000; /* Texto preto */
+.navbar-nav .nav-link:hover, 
+.navbar-nav .nav-link.active {
+    color: var(--primary-gold) !important;
+    text-shadow: 0 0 10px rgba(185, 133, 43, 0.4);
 }
 
-/* Ajuste de cor no hover para links da navbar (exceto os botões customizados) */
-.navbar.bg-metabee-yellow .nav-link:not(.navbar-btn-yellow):hover,
-.navbar.bg-metabee-yellow .navbar-brand:hover {
-    color: #1b150a; /* Preto um pouco mais suave no hover */
+.navbar-brand {
+    font-weight: 800;
+    color: var(--primary-gold) !important;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-shadow: 0 0 15px rgba(185, 133, 43, 0.3); /* Brilho neon no logo */
 }
 
-/* Cor do ícone do toggler (hambúrguer) para preto */
-.navbar.bg-metabee-yellow .navbar-toggler-icon {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 0, 0, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+/* --- Botões com Efeito "Shine" (Brilho Passando) --- */
+.btn-metabee {
+    background: linear-gradient(135deg, var(--primary-gold), #8e631b);
+    color: #fff !important;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    z-index: 1;
 }
 
-.navbar.bg-metabee-yellow .navbar-toggler {
-    border-color: rgba(0,0,0,0.3);
+/* O brilho que passa pelo botão */
+.btn-metabee::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: 0.5s;
+    z-index: -1;
 }
+
+.btn-metabee:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(185, 133, 43, 0.4);
+}
+
+.btn-metabee:hover::after {
+    animation: btn-shine 0.7s ease-in-out; /* Dispara o brilho no hover */
+}
+
+/* --- Terminal de Logs (Atualizado com Hover) --- */
+.terminal-window {
+    background-color: var(--terminal-bg);
+    border: 1px solid #333;
+    border-radius: 8px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    height: 400px;
+    overflow-y: auto;
+    padding: 15px;
+    position: relative;
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.9); /* Sombra interna mais forte */
+}
+
+/* Estilo dos itens da lista de log */
+#log-list li {
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    border-radius: 4px;
+    border-left: 2px solid transparent; /* Prepara para a borda colorida */
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Movimento elástico */
+    cursor: default;
+    position: relative;
+}
+
+/* --- O EFEITO DE HOVER DE VOLTA --- */
+#log-list li:hover {
+    background-color: rgba(255, 255, 255, 0.05); /* Fundo levemente claro */
+    transform: translateX(8px) scale(1.01); /* Move para direita e cresce */
+    border-left-color: var(--primary-gold); /* Barra dourada aparece na esquerda */
+    box-shadow: -5px 0 15px rgba(185, 133, 43, 0.1); /* Brilho sutil dourado */
+}
+
+/* Mantém o estilo do texto do log */
+.log-item-enter {
+    animation: slideInLeft 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* Cursor piscante */
+.blink-cursor::after {
+    content: '█';
+    margin-left: 5px;
+    animation: terminal-blink 1s step-end infinite;
+    color: var(--primary-gold);
+}
+
+/* --- Avatar e Tabelas --- */
+.avatar-md {
+    width: 48px; height: 48px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid var(--primary-gold);
+    transition: transform 0.3s;
+}
+tr:hover .avatar-md { transform: scale(1.1) rotate(5deg); } /* Avatar gira levemente no hover da linha */
+
+.table-hover tbody tr { transition: background-color 0.3s, transform 0.3s; }
+.table-hover tbody tr:hover {
+    background-color: rgba(185, 133, 43, 0.08);
+    transform: translateX(5px); /* Linha desliza levemente para a direita */
+}
+
+/* --- Estatísticas Icons --- */
+.stat-icon {
+    width: 60px; height: 60px;
+    border-radius: 14px;
+    background: rgba(185, 133, 43, 0.1);
+    color: var(--primary-gold);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem; margin-right: 15px;
+    transition: all 0.4s ease;
+}
+
+/* Ícone gira e brilha no hover do card pai */
+.glass-card:hover .stat-icon {
+    background: var(--primary-gold);
+    color: #fff;
+    transform: rotateY(180deg);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0f1012; }
+::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary-gold); }

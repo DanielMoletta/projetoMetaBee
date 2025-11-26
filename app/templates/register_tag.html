@@ -1,37 +1,70 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-body">
-                <h1 class="card-title text-center mb-4 text-metabee-yellow">Registrar Nova Tag RFID</h1>
-                <p class="text-center text-muted">Associe o UID de uma tag a um nome de usuário.</p>
-                <form action="" method="post" novalidate>
+<div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="col-md-5">
+        <div class="card border-0 shadow-lg">
+            <div class="card-header bg-transparent border-0 text-center pt-4">
+                <div class="mb-3">
+                    <span class="fa-stack fa-2x">
+                        <i class="fas fa-circle fa-stack-2x text-metabee"></i>
+                        <i class="fas fa-id-card fa-stack-1x fa-inverse"></i>
+                    </span>
+                </div>
+                <h3 class="card-title text-metabee fw-bold">Cadastro de Acesso</h3>
+                <p class="text-muted small">Vincule um cartão físico a um usuário digital.</p>
+            </div>
+            
+            <div class="card-body px-4 pb-4">
+                <form action="" method="post" enctype="multipart/form-data" novalidate>
                     {{ form.hidden_tag() }}
 
-                    <div class="mb-3">
-                        {{ form.tag_uid.label(class="form-label") }}
-                        {{ form.tag_uid(class="form-control", placeholder="Ex: 0A:1B:2C:3D") }}
+                    <div class="text-center mb-4">
+                        <img id="imagePreview" src="{{ url_for('static', filename='profile_pics/default.jpg') }}" 
+                             alt="Preview" class="avatar-img" style="width: 100px; height: 100px; cursor: pointer;"
+                             onclick="document.getElementById('picture').click();">
+                        <div class="small text-muted mt-2">Toque na imagem para alterar</div>
+                    </div>
+
+                    <div class="mb-3 d-none">
+                        {{ form.picture(class="form-control", onchange="previewImage(this)") }}
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        {{ form.tag_uid(class="form-control", placeholder="UID") }}
+                        {{ form.tag_uid.label }}
                         {% for error in form.tag_uid.errors %}
-                            <div class="invalid-feedback d-block">{{ error }}</div>
+                            <div class="text-danger small mt-1">{{ error }}</div>
                         {% endfor %}
                     </div>
 
-                    <div class="mb-3">
-                        {{ form.username.label(class="form-label") }}
-                        {{ form.username(class="form-control", placeholder="Ex: João Silva") }}
+                    <div class="form-floating mb-4">
+                        {{ form.username(class="form-control", placeholder="Nome") }}
+                        {{ form.username.label }}
                         {% for error in form.username.errors %}
-                            <div class="invalid-feedback d-block">{{ error }}</div>
+                            <div class="text-danger small mt-1">{{ error }}</div>
                         {% endfor %}
                     </div>
 
-                    <div class="d-grid">
-                        {{ form.submit(class="btn btn-metabee") }}
+                    <div class="d-grid gap-2">
+                        {{ form.submit(class="btn btn-metabee btn-lg") }}
+                        <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary">Cancelar</a>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('imagePreview').src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
 {% endblock %}

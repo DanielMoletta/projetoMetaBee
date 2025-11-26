@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, ValidationError
 from app.models import RfidTag
@@ -9,11 +10,11 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Lembrar-me')
     submit = SubmitField('Entrar')
 
-# O RegistrationForm foi removido e substituído por este novo formulário.
 class TagRegistrationForm(FlaskForm):
     tag_uid = StringField('UID da Tag RFID', validators=[DataRequired()])
-    username = StringField('Nome Associado à Tag', validators=[DataRequired()])
-    submit = SubmitField('Registrar Tag')
+    username = StringField('Nome do Usuário', validators=[DataRequired()])
+    picture = FileField('Foto de Perfil', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
+    submit = SubmitField('Cadastrar Tag')
 
     def validate_tag_uid(self, tag_uid):
         tag = RfidTag.query.filter_by(tag_uid=tag_uid.data).first()

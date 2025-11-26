@@ -1,13 +1,16 @@
-from flask import render_template, flash, redirect, url_for, Blueprint, request, jsonify
+from flask import render_template, flash, redirect, url_for, Blueprint, request, jsonify, current_app
 from app import db
 from app.forms import LoginForm, TagRegistrationForm
 from app.models import User, RfidTag, AccessLog
 from flask_login import current_user, login_user, logout_user, login_required
 import requests
 import os
-import time # Import necessário para o controle de tempo
+import time
 from datetime import datetime
+import secrets
 import logging
+from PIL import Image
+
 
 main = Blueprint('main', __name__)
 
@@ -78,7 +81,21 @@ def process_rfid_access(uid: str) -> tuple:
         return tag.username, "Acesso Garantido"
     return "Desconhecido", "Acesso Negado"
 
-# --- NOVOS ENDPOINTS PARA ABERTURA REMOTA ---
+def save_picture(form_picture):
+    """Renomeia a imagem com um hex aleatório e salva na pasta estática."""
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(form_picture.filename)
+    picture_fn = random_hex + f_ext
+    # Certifique-se de que current_app.root_path aponta para a pasta 'app'
+    picture_path = os.path.join(current_app.root_path, 'static/profile_pics', picture_fn)
+
+    # Redimensionar para economizar espaço (Opcional, requer Pillow)
+    output_size = (125, 125)
+    i = Image.open(form_picture)
+    i.thumbnail(output_size)
+    i.save(picture_path)
+    
+    return picture_fn
 
 @main.route('/api/trigger_door', methods=['POST'])
 def trigger_door():
@@ -198,17 +215,23 @@ def register_tag():
     form = TagRegistrationForm()
     if form.validate_on_submit():
         try:
-            existing_tag = RfidTag.query.filter_by(tag_uid=form.tag_uid.data).first()
-            if existing_tag:
-                flash('Tag já registrada!', 'warning')
-            else:
-                tag = RfidTag(tag_uid=form.tag_uid.data, username=form.username.data)
-                db.session.add(tag)
-                db.session.commit()
-                flash('Tag registrada com sucesso!', 'success')
-                return redirect(url_for('main.index'))
-        except Exception:
+            # Lógica de imagem
+            image_file = 'default.jpg'
+            if form.picture.data:
+                image_file = save_picture(form.picture.data)
+
+            tag = RfidTag(
+                tag_uid=form.tag_uid.data, 
+                username=form.username.data,
+                image_file=image_file # Salva o nome do arquivo no banco
+            )
+            db.session.add(tag)
+            db.session.commit()
+            flash('Tag registrada com sucesso!', 'success')
+            return redirect(url_for('main.index'))
+        except Exception as e:
             db.session.rollback()
+            logger.error(f"Erro ao registrar: {e}")
             flash('Erro ao registrar tag.', 'danger')
     return render_template('register_tag.html', title='Registrar Tag', form=form)
 

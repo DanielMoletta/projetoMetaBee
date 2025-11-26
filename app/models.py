@@ -26,6 +26,7 @@ class RfidTag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     tag_uid = db.Column(db.String(64), index=True, unique=True, nullable=False)
     username = db.Column(db.String(64), index=True, unique=True, nullable=False)
+    image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
 
     def __repr__(self):
         return f'<RfidTag {self.username}>'
@@ -35,7 +36,6 @@ class AccessLog(db.Model):
     tag_uid = db.Column(db.String(64), index=True, nullable=False)
     username = db.Column(db.String(64), nullable=False)
     timestamp = db.Column(db.DateTime, index=True, default=lambda: datetime.now(timezone.utc))
-    # NOVO CAMPO para armazenar o status do acesso
     status = db.Column(db.String(20), nullable=False, default='Negado')
 
     def __repr__(self):
